@@ -23,24 +23,44 @@ $email = strip_tags($_POST['email']);
 $phone = strip_tags($_POST['phone']);
 $desc = strip_tags($_POST['desc']);
 
-$sql = " INSERT INTO `trip`.`trip` (`name`, `age`, `school`, `email`, `phone`, `other`, `dt`) 
-        VALUES ('$name', '$age', '$school', '$email', '$phone', '$desc', current_timestamp());";
+//query to pull rows which have email id equal to entered email id
+$queryCheckEmail = mysqli_query($con ,"SELECT * FROM trip.trip WHERE email = '".$_POST['email']."'"); 
 
+//query to pull rows which have phone number equal to entered email id
+$queryCheckPhone = mysqli_query($con ,"SELECT * FROM trip.trip WHERE phone = '".$_POST['phone']."'");
+
+  if (mysqli_num_rows($queryCheckEmail) != 0) //if no. of rows with emailid != 0 ; if statement executed
+  {
+      echo "Email Id already exists";
+  }
+  
+  else if (mysqli_num_rows($queryCheckPhone) != 0) //if no. of rows with phone != 0 ; if statement executed
+  {
+      echo "Phone Number already exists";
+  }
+
+  else //only executed when there is no duplicate email and phone no.
+  {
+        $sql = " INSERT INTO `trip`.`trip` (`name`, `age`, `school`, `email`, `phone`, `other`, `dt`) 
+                VALUES ('$name', '$age', '$school', '$email', '$phone', '$desc', current_timestamp());";
+                if($con -> query($sql)==true){
+                    // echo "Succesfully Inserted";
+                 
+                    // Flag for successful insertion
+                    $insert = true;
+                 }
+                 else{
+                     echo "ERROR : $sql <br> $con ->error";
+                 }
+                 
+                     // Close the database connection
+                 $con -> close();
+                 }
+  }
 //echo $sql;
 // Execute the query
-if($con -> query($sql)==true){
-   // echo "Succesfully Inserted";
 
-   // Flag for successful insertion
-   $insert = true;
-}
-else{
-    echo "ERROR : $sql <br> $con ->error";
-}
 
-    // Close the database connection
-$con -> close();
-}
 ?>
 
 <!DOCTYPE html>
