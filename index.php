@@ -23,6 +23,19 @@ $email = strip_tags($_POST['email']);
 $phone = strip_tags($_POST['phone']);
 $desc = strip_tags($_POST['desc']);
 
+$queryCheckEmail = mysqli_query($con ,"SELECT * FROM trip.trip WHERE email = '".$_POST['email']."'");
+$queryCheckPhone = mysqli_query($con ,"SELECT * FROM trip.trip WHERE phone = '".$_POST['phone']."'");
+
+  if (mysqli_num_rows($queryCheckEmail) != 0)
+  {
+      echo "Email Id already exists";
+  }
+  
+  else if (mysqli_num_rows($queryCheckPhone) != 0)
+  {
+      echo "Phone Number already exists";
+  }
+
 $sql = " INSERT INTO `trip`.`trip` (`name`, `age`, `school`, `email`, `phone`, `other`, `dt`) 
         VALUES ('$name', '$age', '$school', '$email', '$phone', '$desc', current_timestamp());";
 
