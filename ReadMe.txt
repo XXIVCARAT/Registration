@@ -1,1 +1,1 @@
-Registration Page without Login page but has duplicate check
+Regsutration page without password email and phone no. check
