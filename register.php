@@ -2,9 +2,11 @@
 $insert = false;
 
 if(isset($_POST['name'], $_POST['email'], $_POST['pswd'], $_POST['cpswd'])){
-
-    if($_POST['pswd']==$_POST['cpswd']) {
-
+            if($_POST['pswd']!=$_POST['cpswd']) {
+echo"Passwords don't match";
+            }
+            else{
+   
 //set connection variables
 $server = "localhost";
 $username = "root";
@@ -28,23 +30,42 @@ $desc = strip_tags($_POST['desc']);
 $pswd = strip_tags($_POST['pswd']);
 $cpswd = strip_tags($_POST['cpswd']);
 
-$sql = " INSERT INTO `trip`.`trip` (`name`, `age`, `school`, `email`, `phone`, `other`, `pswd`,`cpswd`,`dt`) 
-        VALUES ('$name', '$age', '$school', '$email', '$phone', '$desc', '$pswd', '$cpswd', current_timestamp());";
+//query to pull rows which have email id equal to entered email id
+$queryCheckEmail = mysqli_query($con ,"SELECT * FROM trip.trip WHERE email = '".$_POST['email']."'"); 
 
-//echo $sql;
-// Execute the query
-if($con -> query($sql)==true){
-   // echo "Succesfully Inserted";
+//query to pull rows which have phone number equal to entered email id
+$queryCheckPhone = mysqli_query($con ,"SELECT * FROM trip.trip WHERE phone = '".$_POST['phone']."'");
 
-   // Flag for successful insertion
-   $insert = true;
-}
-else{
-    echo "ERROR : $sql <br> $con ->error";
-}
+  if (mysqli_num_rows($queryCheckEmail) != 0) //if no. of rows with emailid != 0 ; if statement executed
+  {
+      echo "Email Id already exists";
+  }
+  
+  else if (mysqli_num_rows($queryCheckPhone) != 0) //if no. of rows with phone != 0 ; if statement executed
+  {
+      echo "Phone Number already exists";
+  }
 
-    // Close the database connection
-$con -> close();
+  else //only executed when there is no duplicate email and phone no.
+  {
+             $sql = " INSERT INTO `trip`.`trip` (`name`, `age`, `school`, `email`, `phone`, `other`, `pswd`,`cpswd`,`dt`) 
+                     VALUES ('$name', '$age', '$school', '$email', '$phone', '$desc', '$pswd', '$cpswd', current_timestamp());";
+                if($con -> query($sql)==true){
+                    // echo "Succesfully Inserted";
+                 
+                    // Flag for successful insertion
+                    $insert = true;
+                 }
+                 else{
+                     echo "ERROR : $sql <br> $con ->error";
+                 }
+                 
+                     // Close the database connection
+                 $con -> close();
+                 }
+
+                 echo "You have successfuly registered";
+
 }
 }
 ?>
